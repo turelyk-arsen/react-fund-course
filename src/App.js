@@ -3,6 +3,9 @@ import Counter from "./components/Counter";
 import "./styles/App.css";
 import Input from "./components/Input";
 import PostList from "./components/PostList";
+import MyButton from "./components/UI/Button/MyButton";
+import MyInput from "./components/UI/Input/MyInput";
+import PostForm from "./components/PostForm";
 
 function App() {
   const [posts, setPosts] = useState([
@@ -20,11 +23,18 @@ function App() {
       id: 3,
       title: "Javascript 3",
       description: "Javascript is a program language",
-    }
-  ])
+    },
+  ]);
+
+  const createPost = (newPost) => {
+    setPosts([...posts, newPost]);
+  };
+
   return (
     <div className="App">
-      <PostList posts={posts} title={'Lists of posts'}/>
+      <PostForm create={createPost} />
+
+      <PostList posts={posts} title={"Lists of posts"} />
 
       <Counter />
       <Input />
