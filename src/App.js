@@ -11,6 +11,7 @@ import { usePosts } from "./hooks/usePosts";
 import PostService from "./API/PostService";
 import Loader from "./components/UI/Loader/Loader";
 import { useFetching } from "./hooks/useFetching";
+import { getPageCount, getPagesArray } from "./utils/pages";
 
 function App() {
   const [posts, setPosts] = useState([]);
@@ -41,13 +42,28 @@ function App() {
 
   // const [selectedSort, setSelectedSort] = useState("");
   // const [searchQuery, setSearchQuery] = useState("");
+
   const [filter, setFilter] = useState({ sort: "", query: "" });
   const [modal, setModal] = useState(false);
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
+
+  const [totalPages, setTotalPages] = useState(0);
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
+  let pagesArray = getPagesArray(totalPages);
+
   const [fetchPosts, isPostsLoading, postError] = useFetching(async () => {
-    const posts = await PostService.getAll();
-    setPosts(posts);
+    const response = await PostService.getAll(limit, page);
+    // setPosts(posts);
+    setPosts(response.data);
+    const totalCount = response.headers["x-total-count"];
+    setTotalPages(getPageCount(totalCount, limit));
   });
+
+  const changePage = (page) => {
+    setPage(page)
+    fetchPosts()
+  }
 
   useEffect(() => {
     fetchPosts();
@@ -112,9 +128,8 @@ function App() {
 
       <hr style={{ margin: "15px 0" }} />
       <PostFilter filter={filter} setFilter={setFilter} />
-       
-      {postError && 
-      <h1>Error ${postError}</h1>}
+
+      {postError && <h1>Error ${postError}</h1>}
       {isPostsLoading ? (
         <Loader />
       ) : (
@@ -127,6 +142,17 @@ function App() {
 
       <Counter />
       <Input />
+      <div className="page__wrapper">
+        {pagesArray.map((p) => (
+          <span
+            onClick={() => changePage(p)}
+            key={p}
+            className={page === p ? "page page__current" : "page"}
+          >
+            {p}
+          </span>
+        ))}
+      </div>
     </div>
   );
 }
