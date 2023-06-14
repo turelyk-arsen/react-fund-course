@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Counter from "./components/Counter";
 import "./styles/App.css";
 import Input from "./components/Input";
@@ -8,37 +8,53 @@ import PostFilter from "./components/PostFilter";
 import MyModal from "./components/UI/Modal/MyModal";
 import MyButton from "./components/UI/Button/MyButton";
 import { usePosts } from "./hooks/usePosts";
-import axios from "axios";
+import PostService from "./API/PostService";
+import Loader from "./components/UI/Loader/Loader";
+import { useFetching } from "./hooks/useFetching";
 
 function App() {
   const [posts, setPosts] = useState([]);
-    // {
-    //   id: 1,
-    //   title: "Javascript",
-    //   description: "Avascript is a program language",
-    // },
-    // {
-    //   id: 2,
-    //   title: "Avascript 2",
-    //   description: "Javascript is a program language",
-    // },
-    // {
-    //   id: 3,
-    //   title: "Script 3",
-    //   description: "Qavascript is a program language",
-    // },
-  
+  // {
+  //   id: 1,
+  //   title: "Javascript",
+  //   description: "Avascript is a program language",
+  // },
+  // {
+  //   id: 2,
+  //   title: "Avascript 2",
+  //   description: "Javascript is a program language",
+  // },
+  // {
+  //   id: 3,
+  //   title: "Script 3",
+  //   description: "Qavascript is a program language",
+  // },
 
-  async function fetchPosts() {
-    const response = await axios.get('https://jsonplaceholder.typicode.com/posts');
-    setPosts(response.data);
-  }
+  // async function fetchPosts() {
+  //   setIsPostsLoading(true);
+  //   setTimeout(async () => {
+  //     const posts = await PostService.getAll();
+  //     setPosts(posts);
+  //     setIsPostsLoading(false);
+  //   }, 1000);
+  // }
 
   // const [selectedSort, setSelectedSort] = useState("");
   // const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState({ sort: "", query: "" });
   const [modal, setModal] = useState(false);
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
+  const [fetchPosts, isPostsLoading, postError] = useFetching(async () => {
+    const posts = await PostService.getAll();
+    setPosts(posts);
+  });
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  // const [isPostsLoading, setIsPostsLoading] = useState(false);
+  // useEffect(()=>{console.log('hello');}, [filter])
 
   // const sortedPosts = useMemo(() => {
   //   if (selectedSort) {
@@ -85,7 +101,7 @@ function App() {
 
   return (
     <div className="App">
-      <button onClick={fetchPosts}>Get POSTS</button>
+      {/* <button onClick={fetchPosts}>Get POSTS</button> */}
       <MyButton style={{ marginTop: 30 }} onClick={() => setModal(true)}>
         Create POST
       </MyButton>
@@ -96,12 +112,18 @@ function App() {
 
       <hr style={{ margin: "15px 0" }} />
       <PostFilter filter={filter} setFilter={setFilter} />
-
-      <PostList
-        remove={removePost}
-        posts={sortedAndSearchedPosts}
-        title={"Lists of posts"}
-      />
+       
+      {postError && 
+      <h1>Error ${postError}</h1>}
+      {isPostsLoading ? (
+        <Loader />
+      ) : (
+        <PostList
+          remove={removePost}
+          posts={sortedAndSearchedPosts}
+          title={"Lists of posts"}
+        />
+      )}
 
       <Counter />
       <Input />
