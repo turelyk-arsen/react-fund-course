@@ -1,9 +1,25 @@
 import { useMemo } from "react";
 
+// export const useSortedPosts = (posts, sort) => {
+//   const sortedPosts = useMemo(() => {
+//     if (sort) {
+//       return [...posts].sort((a, b) => a[sort].localeCompare(b[sort]));
+//     }
+//     return posts;
+//   }, [sort, posts]);
+
+//   return sortedPosts;
+// };
+
 export const useSortedPosts = (posts, sort) => {
   const sortedPosts = useMemo(() => {
     if (sort) {
-      return [...posts].sort((a, b) => a[sort].localeCompare(b[sort]));
+      return [...posts].sort((a, b) => {
+        if (a[sort] && b[sort]) {
+          return a[sort].localeCompare(b[sort]);
+        }
+        return 0;
+      });
     }
     return posts;
   }, [sort, posts]);
