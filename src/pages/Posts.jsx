@@ -47,7 +47,7 @@ function Posts() {
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
 
   const [totalPages, setTotalPages] = useState(0);
-  const [limit, setLimit] = useState(10);
+  const [limit] = useState(10);
   const [page, setPage] = useState(1);
 
   const [fetchPosts, isPostsLoading, postError] = useFetching(async () => {
