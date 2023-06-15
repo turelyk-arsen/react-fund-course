@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import "../styles/App.css";
 import PostList from "../components/PostList";
 import PostForm from "../components/PostForm";
@@ -50,23 +50,28 @@ function Posts() {
   const [limit] = useState(10);
   const [page, setPage] = useState(1);
 
-  const [fetchPosts, isPostsLoading, postError] = useFetching(async () => {
-    const response = await PostService.getAll(limit, page);
-    // setPosts(posts);
-    setPosts(response.data);
-    const totalCount = response.headers["x-total-count"];
-    setTotalPages(getPageCount(totalCount, limit));
-  });
+  const fetchPosts = useCallback(async () => {
+    try {
+      const response = await PostService.getAll(limit, page);
+      setPosts(response.data);
+      const totalCount = response.headers["x-total-count"];
+      setTotalPages(getPageCount(totalCount, limit));
+    } catch (e) {
+      console.error("Failed to fetch posts", e);
+    }
+  }, [limit, page]); 
+
+  const [, isPostsLoading, postError] = useFetching(fetchPosts);
+
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]); 
+
 
   const changePage = (page) => {
     setPage(page)
     // fetchPosts()
   }
-
-  useEffect(() => {
-    fetchPosts();
-  }, [page]);
-
   // const [isPostsLoading, setIsPostsLoading] = useState(false);
   // useEffect(()=>{console.log('hello');}, [filter])
 
