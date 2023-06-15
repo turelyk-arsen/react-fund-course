@@ -44,6 +44,7 @@
 .page__wrapper {
   margin-top: 30px;
   display: flex;
+  margin-bottom: 100px;
 }
 
 .page {
@@ -64,9 +65,33 @@
   padding: 0 15px;
   background-color: lightgray;
 }
+.footer {
+  height: 50px;
+  background-color: lightgray;
+  width: 100%;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+}
+.page_container {
+  min-height: 100%;
+  position: relative;
+}
 .navbar__links {
-  margin-left: auto;
+  /* margin-left: auto ; */
+}
+
+.navbar__links__ {
+  margin: 10px;
+}
+.navbar__links___ {
+margin: auto;
 }
 .post__btns {
   display: flex;
+}
+.footer_text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

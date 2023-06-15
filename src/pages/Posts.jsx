@@ -140,8 +140,8 @@ function Posts() {
         />
       )}
       <Pagination page={page} changePage={changePage} totalPages={totalPages}/>
-      <Counter />
-      <Input />
+      {/* <Counter />
+      <Input /> */}
 
     </div>
   );
