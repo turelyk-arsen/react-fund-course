@@ -13,7 +13,7 @@ function App() {
     if (localStorage.getItem("auth")) {
       setIsAuth(true);
     }
-  });
+  }, []);
 
   return (
     <AuthContext.Provider value={{ isAuth, setIsAuth: setIsAuth }}>

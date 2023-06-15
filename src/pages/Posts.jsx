@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Counter from "../components/Counter";
 import "../styles/App.css";
-import Input from "../components/Input";
 import PostList from "../components/PostList";
 import PostForm from "../components/PostForm";
 import PostFilter from "../components/PostFilter";
@@ -11,7 +9,7 @@ import { usePosts } from "../hooks/usePosts";
 import PostService from "../API/PostService";
 import Loader from "../components/UI/Loader/Loader";
 import { useFetching } from "../hooks/useFetching";
-import { getPageCount, getPagesArray } from "../utils/pages";
+import { getPageCount } from "../utils/pages";
 import Pagination from "../components/UI/pagitation/Pagination";
 
 function Posts() {
